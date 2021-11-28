@@ -1,0 +1,29 @@
+mixed_state_measured_on_hv_basis
+mixed_state_measured_on_da_basis
+pH:  0.4914531102113142         pV:  0.5085468897886858 
+pA:  0.49774612971769705        pD:  0.502253870282303 
+pR:  0  pL:  0
+stokes:  [ 1.         -0.00450774  0.         -0.01709378]
+check normalization:  0.01767815106954228
+pguess: 0.9999949200429445 hmin: 7.3288474669631045e-06 
+
+
+d_state_measured_on_hv_basis
+d_state_measured_on_da_basis
+pH:  0.518879329451351  pV:  0.48112067054864904 
+pA:  0.030891658147053136       pD:  0.9691083418529469 
+pR:  0  pL:  0
+stokes:  [ 1.         -0.93821668  0.          0.03775866]
+check normalization:  0.9389761774966476
+pguess: 0.6730241705773465 hmin: 0.5712697770563732 
+
+
+l_state_measured_on_hv_basis
+l_state_measured_on_da_basis
+l_state_measured_on_lr_basis
+pH:  0.5131439434839637         pV:  0.4868560565160363 
+pA:  0.499927916053095  pD:  0.500072083946905 
+pR:  0.0059491465831362274      pL:  0.9940508534168637
+stokes:  [ 1.00000000e+00 -1.44167894e-04 -9.88101707e-01  2.62878870e-02]
+check normalization:  0.9884513426736521
+pguess: 0.5769009040387252 hmin: 0.7936045706959473 
