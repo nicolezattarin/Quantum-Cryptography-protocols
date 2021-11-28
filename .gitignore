@@ -2,8 +2,8 @@
 */tex/*
 
 #data
-cleaned_data/*
-data/*
+*/cleaned_data/*
+*/data/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
