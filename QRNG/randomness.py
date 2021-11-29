@@ -1,15 +1,22 @@
 import numpy as np
 import pandas as pd
 from scipy.io import loadmat 
+from math import e
 
 class probability():
-    def __init__(self, h, v, d, a, r, l):
+    def __init__(self, h, v, d, a, r, l, sigmah, sigmav, sigmad, sigmaa, sigmar, sigmal):
         self.h = h
         self.v = v
         self.d = d
         self.a = a
         self.r = r
         self.l = l
+        self.sigmah = sigmah
+        self.sigmav = sigmav
+        self.sigmad = sigmad
+        self.sigmaa = sigmaa
+        self.sigmar = sigmar
+        self.sigmal = sigmal
 
 def get_probabilities (df):
     """
@@ -33,32 +40,61 @@ def probabilities (dfHV, dfDA=None, dfRL=None, basis='hv' ):
     for each projector of the measurement basis. 
     """
     if basis.lower() == 'hv':
+        N = len(dfHV)
         df = dfHV
-        pH = len(df[df['channel']==3])/len(df)
-        pV = len(df[df['channel']==4])/len(df)
-        p = probability(pH, pV, 0, 0, 0, 0)
+        nH = len(df[df['channel']==3])
+        nV = len(df[df['channel']==4])
+        pH = nH/N
+        pV = nV/N
+
+        sigmaH = np.sqrt(nH/(N**2)+(nH**2)/N**3)
+        sigmaV = np.sqrt(nV/(N**2)+(nV**2)/N**3)
+        p = probability(pH, pV, 0, 0, 0, 0, sigmaH, sigmaV, 0, 0, 0, 0)
         return p
     elif basis.lower() == 'hvda':
-        N = len(dfHV)+len(dfDA)
-        pH = len(dfHV[dfHV['channel']==3])/len(dfHV)
-        pV = len(dfHV[dfHV['channel']==4])/len(dfHV)
-        pD = len(dfDA[dfDA['channel']==3])/len(dfDA)
-        pA = len(dfDA[dfDA['channel']==4])/len(dfDA)
-        p = probability(pH, pV, pD, pA, 0, 0)
+        Nhv = len(dfHV)
+        Nda = len(dfDA)
+        nH = len(dfHV[dfHV['channel']==3])
+        nV = len(dfHV[dfHV['channel']==4])
+        nD = len(dfDA[dfDA['channel']==3])
+        nA = len(dfDA[dfDA['channel']==4])
+        pH = nH/Nhv
+        pV = nV/Nhv
+        pD = nD/Nda
+        pA = nA/Nda
+        sigmaH = np.sqrt(nH/(Nhv**2)+(nH**2)/Nhv**3)
+        sigmaV = np. sqrt(nV/(Nhv**2)+(nV**2)/Nhv**3)
+        sigmaD = np.sqrt(nD/(Nda**2)+(nD**2)/Nda**3)
+        sigmaA = np.sqrt(nA/(Nda**2)+(nA**2)/Nda**3)
+        p = probability(pH, pV, pD, pA, 0, 0, sigmaH, sigmaV, sigmaD, sigmaA, 0, 0)
         return p
     elif basis == 'all':
-        N = len(dfHV)+len(dfDA)+len(dfRL)
-        pH = len(dfHV[dfHV['channel']==3])/len(dfHV)
-        pV = len(dfHV[dfHV['channel']==4])/len(dfHV)
-        pD = len(dfDA[dfDA['channel']==3])/len(dfDA)
-        pA = len(dfDA[dfDA['channel']==4])/len(dfDA)
-        pR = len(dfRL[dfRL['channel']==3])/len(dfRL)
-        pL = len(dfRL[dfRL['channel']==4])/len(dfRL)
-        p = probability(pH, pV, pD, pA, pR, pL)   
+        Nhv = len(dfHV)
+        Nda = len(dfDA)
+        Nlr = len(dfRL)
+        nH = len(dfHV[dfHV['channel']==3])
+        nV = len(dfHV[dfHV['channel']==4])
+        nD = len(dfDA[dfDA['channel']==3])
+        nA = len(dfDA[dfDA['channel']==4])
+        nR = len(dfRL[dfRL['channel']==3])
+        nL = len(dfRL[dfRL['channel']==4])
+        pH = nH/Nhv
+        pV = nV/Nhv
+        pD = nD/Nda
+        pA = nA/Nda
+        pR = nR/Nlr
+        pL = nL/Nlr
+        sigmaH = np.sqrt(nH/(Nhv**2)+(nH**2)/Nhv**3)
+        sigmaV = np. sqrt(nV/(Nhv**2)+(nV**2)/Nhv**3)
+        sigmaD = np.sqrt(nD/(Nda**2)+(nD**2)/Nda**3)
+        sigmaA = np.sqrt(nA/(Nda**2)+(nA**2)/Nda**3)
+        sigmaR = np.sqrt(nR/(Nlr**2)+(nR**2)/Nlr**3)
+        sigmaL = np.sqrt(nL/(Nlr**2)+(nL**2)/Nlr**3)
+        p = probability(pH, pV, pD, pA, pR, pL, sigmaH, sigmaV, sigmaD, sigmaA, sigmaR, sigmaL)
         return p
     else: raise ValueError('basis must be hv or hvda')
 
-def trusted_randomness (pch3, pch4):
+def trusted_randomness (pch3, sigma_pch3, pch4, sigma_pch4):
     """
     From the probabilities of the measurement basis, estimate the guessing 
     Probability of the randomness of the measurement and the min entropy
@@ -70,10 +106,14 @@ def trusted_randomness (pch3, pch4):
         hmin: min entropy
     """
     pguess = max(pch4, pch3)
-    hmin = -np.log2(pguess)
-    return pguess, hmin
+    if pguess == pch3: perror = sigma_pch3
+    else: perror = sigma_pch4
 
-def uncertainty_randomness (pch3, pch4):
+    hmin = -np.log2(pguess)
+    herror = np.log2(e)*perror/pguess
+    return pguess, perror, hmin, herror
+
+def uncertainty_randomness (pch3, sigma_pch3, pch4, sigma_pch4):
     """
     From the probabilities of the measurement basis, estimates bounds for 
     the guessing probability and the min entropy applying the uncertainty priciple
@@ -90,8 +130,10 @@ def uncertainty_randomness (pch3, pch4):
     """
     dim=2
     hmin=np.log2(dim)-2*np.log2(sum([np.sqrt(pch3), np.sqrt(pch4)]))
+    herror =(np.log2(e)/(np.sqrt(pch3)+np.sqrt(pch4)))*np.sqrt(pch3**(-3)*sigma_pch3**2+pch4**(-3)*sigma_pch4**2)
     pguess=2**(-hmin)
-    return pguess, hmin
+    perror = hmin*herror*2**(-hmin-1)
+    return pguess, perror, hmin, herror
 
 def density_matrix (pH, pV, pD=0, pA=0, pR=0, pL=0):
     """
