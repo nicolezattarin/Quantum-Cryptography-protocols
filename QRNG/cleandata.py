@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-def cleaning(data, cut=2e-8, nsigma=3):
+def cleaning(data, cut=2e-8, window=3e-9):
     #data cleaning of independent events
     df = data[data['time']<cut]
 
@@ -17,15 +17,15 @@ def cleaning(data, cut=2e-8, nsigma=3):
     print('channel 4 \t mean: {}, std: {}'.format(mynorm4[0], mynorm4[1]))
 
     if mynorm3[0]<mynorm4[0]:
-        ll_cut = mynorm3[0]-nsigma*mynorm3[1]
-        lr_cut = mynorm3[0]+nsigma*mynorm3[1]
-        rr_cut = mynorm4[0]+nsigma*mynorm4[1]
-        rl_cut = mynorm4[0]-nsigma*mynorm4[1]
+        ll_cut = mynorm3[0]-window
+        lr_cut = mynorm3[0]+window
+        rr_cut = mynorm4[0]+window
+        rl_cut = mynorm4[0]-window
     else:
-        ll_cut = mynorm4[0]-nsigma*mynorm4[1]
-        lr_cut = mynorm4[0]+nsigma*mynorm4[1]
-        rr_cut = mynorm3[0]+nsigma*mynorm3[1]
-        rl_cut = mynorm3[0]-nsigma*mynorm3[1]
+        ll_cut = mynorm4[0]-window
+        lr_cut = mynorm4[0]+window
+        rr_cut = mynorm3[0]+window
+        rl_cut = mynorm3[0]-window
 
     print('Cutting...')
     m1 = df['time']>ll_cut 
@@ -53,20 +53,21 @@ def plot_histo(df, path):
 
 import argparse
 parser = argparse.ArgumentParser()
-parser.add_argument("--path", default='coincidences/mixed_state_measured_on_hv_basis_coincidences.txt', help="filename.", type=str)
+parser.add_argument("--path", default='coincidences/d_state_measured_on_da_basis_coincidences.txt', help="filename.", type=str)
 parser.add_argument("--cut", default=2e-8, help="Cut level for the brute force cleaning.", type=float)
-parser.add_argument("--nsigma", default=2, help="number of stddev to take into consideration.", type=float)
+parser.add_argument("--window", default=3e-9, help="window for coincidence events.", type=float)
 
-def main(path, cut, nsigma):
+def main(path, cut, window):
     """
     Read the data from the .mat file given as argument and find the coincidences.
     coincidences are saved in a .txt file in the coincidences folder.
     """
+    print(path)
     import os
     if path[:13] != 'coincidences/': raise ValueError('path must be in coincidences folder')
     print('Uploading...')
     df = pd.read_csv(path, usecols=['time', 'channel'], dtype={'time': np.float128, 'channel': np.int64})
-    clean = cleaning(df, cut, nsigma)
+    clean = cleaning(df, cut, window)
     plot_histo(clean, path)
 
     if (os.path.isdir('cleaned_data')==False):
