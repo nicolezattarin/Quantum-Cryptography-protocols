@@ -45,16 +45,17 @@ def main():
         print('pH: ', p.h, '\tpV: ', p.v, \
             '\npA: ', p.a, '\tpD: ', p.d, \
             '\npR: ', p.r, '\tpL: ', p.l)
-        rho, s = density_matrix(p.h, p.v, p.a, p.d, p.r, p.l)
-        pguess, hmin = tomographic_randomness(s)
+        rho, s, sigmas = density_matrix(p.h, p.v, p.a, p.d, p.r, p.l, 
+                                        p.sigmah, p.sigmav, p.sigmaa, p.sigmad, p.sigmar, p.sigmal)
+        pguess, perror, hmin, herror= tomographic_randomness(s, sigmas)
         print('pguess:', pguess, 'hmin:', hmin, '\n\n')
 
-        filename = 'results/'+f[13:-23]+'_results_tomography.txt'
+        filename = 'results/'+f[13:18]+'_results_tomography.txt'
         out = open(filename, 'w')
 
-        out.write('pH\tpV\tpA\tpD\tpR\tpL\tpguess\thmin\n')
-        out.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'\
-            .format(p.h, p.v, p.a, p.d, p.r, p.l, pguess, hmin))
+        out.write('pH\tpV\tpA\tpD\tpR\tpL\tpguess\tsigmapguess\thmin\tsigmahmin\n')
+        out.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'\
+            .format(p.h, p.v, p.a, p.d, p.r, p.l, pguess, perror, hmin, herror))
         out.close()
 
         filename = 'results/'+n+'_densitymatrix.txt'
