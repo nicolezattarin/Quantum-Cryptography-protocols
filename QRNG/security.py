@@ -45,9 +45,9 @@ def security(Hmin, Herr, length):
     errsecurity.to_csv('security/errsecurity_untrusted.csv')
 
 def main():
-    Hmin = [8e-6, 0.580, 0.79]
-    Herr = [6e-6, 0.007, 0.01]
-    length = [2,4,6,8,10,12,14,16]
+    Hmin = [0.975, 0.946, 8e-6, 0.580, 0.79]
+    Herr = [0.003, 0.005, 6e-6, 0.007, 0.01]
+    length = np.arange(1, 10, 1)
     security(Hmin, Herr, length)
 
 if __name__ == '__main__':
