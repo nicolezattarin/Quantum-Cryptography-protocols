@@ -18,8 +18,13 @@ In particular, the drive contains raw data in .mat format concerning the measure
 To get the results one should follow the workflow that follows
 1. Preprocessing:  we keep only the events which have a coincidence between the heralded photon (channel 2) and the observed photon (either channel 3 or 4)
 * Run `coincidences.py` multiple times, passing as argument the path to the .mat file. This code generates the folder `coincidences`, where we store the time differences between the detection of a photon in channel 2 and either in 3 or 4;
-* Run `cleandata.py` multiple times, passing as argument the path to file in the `/coincidences` folder. This code generates the folder `coincidences`, where we store the time differences between the detection of a photon in channel 2 and either in 3 or 4;
-2. 
+* Run `cleandata.py` multiple times, passing as argument the path to file in the `/coincidences` folder. This code generates the folder `cleaned_data`, where we store events that are coincident within a given window, the default value is 3ns;
+2. Trusted QRNG: we use the measurements of a mixed and a pure D state on H/V basis to estimate the classical min-entropy.
+Run `trusted.py`. This code generates the files in the `results` folder with the computed probabilities, min-entropy and guessing probability. All quantities are presented with their propagated error
+3. Source-DI QRNG with uncertainty principle: 
+
+
+
 
 
 
