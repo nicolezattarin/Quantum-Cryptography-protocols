@@ -134,7 +134,8 @@ def uncertainty_randomness (pch3, sigma_pch3, pch4, sigma_pch4):
     """
     dim=2
     hmin=np.log2(dim)-2*np.log2(sum([np.sqrt(pch3), np.sqrt(pch4)]))
-    herror =(1/np.log(2))*(1/(np.sqrt(pch3)+np.sqrt(pch4)))*np.sqrt(pch3**(-1)*sigma_pch3**2+pch4**(-1)*sigma_pch4**2)
+    herror =(1/np.log(2))*(1/(np.sqrt(pch3)+np.sqrt(pch4)))*\
+            np.sqrt(pch3**(-1)*sigma_pch3**2+pch4**(-1)*sigma_pch4**2)
     pguess=2**(-hmin)
     perror = hmin*herror*2**(-hmin-1)
     return pguess, perror, hmin, herror

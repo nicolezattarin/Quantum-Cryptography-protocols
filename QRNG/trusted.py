@@ -20,7 +20,7 @@ def main():
     for f in files:
         filename = 'results/'+f[13:-23]+'_results.txt'
         out = open(filename, 'w')
-        df = pd.read_csv(f, usecols=['time', 'channel'], dtype={'time': np.float128, 'channel': np.int64})
+        df = pd.read_csv(f, usecols=['time','channel'],dtype={'time':np.float128,'channel':np.int64})
         p = probabilities(df)
         pch3=p.h
         sigma3 = p.sigmah
@@ -33,7 +33,8 @@ def main():
         print('pguess:', pguess, 'hmin:', hmin, '\n\n')
 
         out.write('pH\tsigmaH\tpV\tsigmaV\tpguess\tsigmapguess\thmin\tsigmahmin\n')
-        out.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(pch3, sigma3, pch4, sigma4, pguess, perror, hmin, herror))
+        out.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.\
+                format(pch3, sigma3, pch4, sigma4, pguess, perror, hmin, herror))
         out.close()
 
 if __name__ == "__main__":

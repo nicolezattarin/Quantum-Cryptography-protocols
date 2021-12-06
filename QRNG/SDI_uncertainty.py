@@ -41,7 +41,8 @@ def main():
         print('pguess:', pguess, 'hmin:', hmin, '\n\n')
 
         out.write('pH\tsigmaH\tpV\tsigmaV\tpguess\tsigmapguess\thmin\tsigmahmin\n')
-        out.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(pch3, sigma3, pch4, sigma4, pguess, perror, hmin, herror))
+        out.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.\
+                    format(pch3, sigma3, pch4, sigma4, pguess, perror, hmin, herror))
         out.close()
 
     
