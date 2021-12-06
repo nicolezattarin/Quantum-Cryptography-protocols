@@ -1,5 +1,8 @@
 *.DS_Store
 */tex/*
+QKD_LDPC_python-master/*
+
+
 
 #data
 */cleaned_data/*
