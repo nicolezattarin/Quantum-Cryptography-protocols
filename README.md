@@ -27,7 +27,7 @@ Run `trusted.py`. This code generates the files in the `results` folder with the
 
 See [the report](https://github.com/nicolezattarin/Quantum-Cryptography-protocols/blob/main/QRNG/report.pdf) for a complete discussion of both theoretical background and results.
 
-### References:
+***References:***
 
 [1] M. Fiorentino, C. Santori, S. M. Spillane, R. G. Beausoleil, and W. J. Munro. Secure self-calibrating quantum random-bit generator. Phys. Rev. A, 75:032334, Mar 2007. doi: 10.1103/PhysRevA.75.032334. URL https://link.aps.org/doi/10.1103/PhysRevA.75.032334.
 
