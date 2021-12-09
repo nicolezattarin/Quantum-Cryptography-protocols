@@ -137,7 +137,7 @@ def uncertainty_randomness (pch3, sigma_pch3, pch4, sigma_pch4):
     herror =(1/np.log(2))*(1/(np.sqrt(pch3)+np.sqrt(pch4)))*\
             np.sqrt(pch3**(-1)*sigma_pch3**2+pch4**(-1)*sigma_pch4**2)
     pguess=2**(-hmin)
-    perror = hmin*herror*2**(-hmin-1)
+    perror = herror*2**(-hmin)/np.log(2)
     return pguess, perror, hmin, herror
 
 def density_matrix (pH, pV, pD=0, pA=0, pR=0, pL=0, 
@@ -188,7 +188,7 @@ def tomographic_randomness (S, sigmas):
         herror: error over min entropy
     """
     pguess = (1+np.sqrt(1-S[1]**2-S[2]**2))/2
-    perror = (1-S[1]**2-S[2]**2)**(-1/2)/2. * np.sqrt((sigmas[1]*S[1])**2+(sigmas[2]*S[2])**2)
+    perror = 0.5*(1-S[1]**2-S[2]**2)**(-1/2.) * np.sqrt((sigmas[1]*S[1])**2+(sigmas[2]*S[2])**2)
     hmin = -np.log2(pguess)
     herror = perror/(pguess*np.log(2))
     return pguess, perror, hmin, herror
