@@ -8,6 +8,7 @@ QKD_LDPC_python-master/*
 */cleaned_data/*
 */data/*
 */coincidences/*
+*/QKD_Lab_data/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
