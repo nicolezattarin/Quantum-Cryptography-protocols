@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
-from bitarray import bitarray
-
 import argparse
+
+
 parser = argparse.ArgumentParser()
-parser.add_argument("--filename", default='QKD_Lab_data/input-keys.bob', help="filename.", type=str)
+parser.add_argument("--filename", default='QKD_Lab_data/input-keys.alice', help="filename.", type=str)
 parser.add_argument("--maxiter", default=None, help="maximum keys to read.", type=int)
 
 def main(filename, maxiter):
