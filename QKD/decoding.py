@@ -4,7 +4,7 @@ import argparse
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--filename", default='QKD_Lab_data/input-keys.alice', help="filename.", type=str)
+parser.add_argument("--filename", default='QKD_Lab_data/input-keys.decoy', help="filename.", type=str)
 parser.add_argument("--maxiter", default=None, help="maximum keys to read.", type=int)
 
 def main(filename, maxiter):
@@ -29,7 +29,7 @@ def main(filename, maxiter):
     """
     keys = []
     block_sizes = []
-
+    
     #decode file
     bytes = np.fromfile(filename, dtype = "uint8")
     i=0
@@ -49,7 +49,7 @@ def main(filename, maxiter):
         print("Decoding key: ", count, " of ", len(keys))
         decoded = []
         k = np.split(k, len(k)//2)
-        if filename[:5] != 'alice' or filename[:3] == 'bob':
+        if filename[-5:] == 'alice' or filename[-3:] == 'bob':
             for pair in k:
                 if (pair==[0,0]).all(): decoded.append('H')
                 elif (pair==[0,1]).all(): decoded.append('V')
@@ -68,8 +68,8 @@ def main(filename, maxiter):
             if maxiter != None and count == maxiter-1: break
             count+=1
 
-    decoded_keys = np.array(decoded_keys)
-    block_sizes = np.array(block_sizes)
+    decoded_keys = np.array(decoded_keys, dtype=object)
+    block_sizes = np.array(block_sizes, dtype=object)
 
     print(decoded_keys.shape, block_sizes.shape)
 
@@ -83,12 +83,12 @@ def main(filename, maxiter):
         os.mkdir(dir)
 
     df = pd.DataFrame(decoded_keys, columns=['key'])
-    df['block_size'] = block_sizes
-    if filename[:5] != 'alice':
+    df['block_size'] = block_sizes[:maxiter]
+    if filename[-5:] == 'alice':
         df.to_csv(dir+'/decoded_keys_alice.csv', index=False)
-    elif filename[:3] == 'bob':
+    elif filename[-3:] == 'bob':
         df.to_csv(dir+'/decoded_keys_bob.csv', index=False)
-    elif filename[:5] == 'decoy':
+    elif filename[-5:] == 'decoy':
         df.to_csv(dir+'/decoded_keys_decoy.csv', index=False)
 
     print("Done!")
