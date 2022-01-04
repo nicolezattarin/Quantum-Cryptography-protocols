@@ -4,7 +4,7 @@ import argparse
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--filename", default='QKD_Lab_data/input-keys.bob', help="filename.", type=str)
+parser.add_argument("--filename", default='QKD_Lab_data/input-keys.decoy', help="filename.", type=str)
 parser.add_argument("--maxiter", default=None, help="maximum keys to read.", type=int)
 
 def main(filename, maxiter):
@@ -95,7 +95,7 @@ def main(filename, maxiter):
         decoded_basis = np.array(decoded_basis, dtype=object)
     block_sizes = np.array(block_sizes, dtype=int)
     decoded_states = np.array(decoded_states, dtype=object)
-    print(decoded_keys.shape, block_sizes.shape)
+
 
     #check if keys are correct
     print ("Decoded key (first 3 bytes): ", decoded_states[0][:12])
