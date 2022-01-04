@@ -32,13 +32,13 @@ class parameters():
             warnings.warn('Decoy strong intensity must be greater than decoy weak intensity')
             decoy_strong_intensity, decoy_weak_intensity = decoy_weak_intensity, decoy_strong_intensity
         
-        self.alice_key_basis_prob = alice_key_basis_prob
-        self.alice_check_basis_prob = alice_check_basis_prob
-        self.bob_key_basis_prob = bob_key_basis_prob
-        self.bob_check_basis_prob = bob_check_basis_prob
-        self.decoy_strong_prob = decoy_strong_prob
-        self.decoy_weak_prob = decoy_weak_prob
-        self.decoy_strong_intensity = decoy_strong_intensity
-        self.decoy_weak_intensity = decoy_weak_intensity
+        self.a_key_basis_prob = alice_key_basis_prob
+        self.a_check_basis_prob = alice_check_basis_prob
+        self.b_key_basis_prob = bob_key_basis_prob
+        self.b_check_basis_prob = bob_check_basis_prob
+        self.d_strong_prob = decoy_strong_prob
+        self.d_weak_prob = decoy_weak_prob
+        self.d_strong_intensity = decoy_strong_intensity
+        self.d_weak_intensity = decoy_weak_intensity
         self.secrecy = secrecy
         self.correctness = correctness
