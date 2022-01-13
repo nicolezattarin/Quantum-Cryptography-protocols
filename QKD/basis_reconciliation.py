@@ -7,12 +7,13 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--block_length", default=int(15000), help="number of total observations in the key basis",type=float)
 
 
-
 def main(block_length):
 
     a = pd.read_csv('QKD_keys/decoded_keys_alice.csv')
     b = pd.read_csv('QKD_keys/decoded_keys_bob.csv')
     d = pd.read_csv('QKD_keys/decoded_keys_decoy.csv')
+
+    print('processing data...')
     a['key'] = a['key'].apply(lambda x: np.array(list(x), dtype=int)) #true if it is the basis X (not key)
     a['basis'] = a['basis'].apply(lambda x: np.array(list(x), dtype=int))
     b['key'] = b['key'].apply(lambda x: np.array(list(x), dtype=int))
@@ -23,11 +24,12 @@ def main(block_length):
     df = pd.concat([a,b,d], axis=1)
     df.columns = ['alice_state','total_bits', 'alice_key', 'alice_basis', 
                 'bob_state', 'bob_key', 'bob_basis', 'decoy_state']
+
+    print('checking basis and correctness...')
     df['total_bits'] = df.apply(lambda x: len(x['alice_key']), axis=1)
     df['same_basis'] = df.apply(lambda x: x['alice_basis'] == x['bob_basis'], axis=1)
     df['same_bits'] = df.apply(lambda x: x['alice_key'] == x['bob_key'], axis=1)
     df['correctness'] = df.apply(lambda x: x['same_basis'] & x['same_bits'], axis=1)
-
     df['decoy'] = df.apply(lambda x: list(x['decoy_state']) == np.full(len(x['decoy_state']), 'S'), axis=1) #true if the decoy is the  strong one
     df.to_csv('QKD_keys/basis_reconciliation.csv', index=False)
 
@@ -87,8 +89,7 @@ def main(block_length):
                         'total_pulses':total_pulses})
     import os
     if not os.path.exists('results'): os.mkdir('results')
-    results.to_csv('results/countings.csv', index=False)
-
+    results.to_csv('results/countings_{}.csv'.format(block_length), index=False)
 
 if __name__ == "__main__":
     args = vars(parser.parse_args())
