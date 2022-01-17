@@ -57,6 +57,8 @@ class parameters():
                     self.d_strong_prob*np.exp(-self.d_strong_intensity)
         self.tau1 = self.d_weak_prob*np.exp(-self.d_weak_intensity)*self.d_weak_intensity +\
                     self.d_strong_prob*np.exp(-self.d_strong_intensity)*self.d_strong_intensity
-        
+        #fixed parameters
+        self.a = 6
+        self.b = 19
 
 
