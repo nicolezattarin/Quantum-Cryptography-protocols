@@ -54,7 +54,7 @@ def main(filename, maxiter):
         bits = []
         k = np.split(k, len(k)//2)
         if filename[-5:] == 'alice' or filename[-3:] == 'bob':
-            for pair in k:
+            for pair in k: #0 basis Z (key), 1 basis X (check), H/D bit 1, V/A bit 0
                 if (pair==[0,0]).all(): 
                     states.append('H')
                     bits.append('0')
