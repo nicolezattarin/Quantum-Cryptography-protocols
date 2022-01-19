@@ -4,9 +4,8 @@ import argparse
 from parameters import parameters
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--block_size", default=int(1e6), help="block_size ",type=int)
+parser.add_argument("--block_size", default=int(1e7), help="block_size ",type=int)
 parser.add_argument("--frac_data", default=1, help="fracrtion of data to read ",type=float)
-parser.add_argument("--repetition_rate", default=1, help="repetition_rate of the soure ",type=float)
 parser.add_argument("--alice_key_basis_prob", default=0.9, help="alice key basis probability ",type=float)
 parser.add_argument("--alice_check_basis_prob", default=0.1, help="alice check basis probability ",type=float)
 parser.add_argument("--bob_key_basis_prob", default=0.5, help="bob key basis probability ", type=float)
@@ -17,7 +16,7 @@ parser.add_argument("--decoy_strong_intensity", default=0.4699, help="decoy weak
 parser.add_argument("--decoy_weak_intensity", default=0.1093, help="decoy weak pulse intensity ", type=float)
 
 
-def main(block_size,frac_data, repetition_rate,
+def main(block_size,frac_data,
         alice_key_basis_prob, alice_check_basis_prob, 
         bob_key_basis_prob, bob_check_basis_prob,
         decoy_strong_prob, decoy_weak_prob,
@@ -31,7 +30,12 @@ def main(block_size,frac_data, repetition_rate,
                     lambda_EC=1.16)
 
     df = pd.read_csv('results/countings_{}_{}frac.csv'.format(block_size, frac_data))
-    df=df.drop(df.index[-1], axis=0)
+    df = df.drop(df.index[-1], axis=0)
+
+    time_scale = np.mean(df['total_pulses']/df['time'])
+    repetition_rate = 1
+    print('repetition rate: {}'.format(time_scale))
+    df['time'] = df['total_pulses']/time_scale
 
     # errors on countings and finite key effect
     for c in df.columns[1:]:
@@ -168,7 +172,7 @@ def main(block_size,frac_data, repetition_rate,
     #phase error finally
     df['phi_up'] = df['v_check_1_up']/df['s_check_1_low'] + df['gamma']
     df['phi_up_err'] = np.sqrt(err_temp**2 + df['gamma_err']**2)
-    df[df<0] = 0
+    # df[df<0] = 0
 
     def bin_entropy(x, ex):
             entropy = -x*np.log2(x)-(1-x)*np.log2(1-x)
@@ -176,7 +180,8 @@ def main(block_size,frac_data, repetition_rate,
             return entropy, error
 
     entropy, error = bin_entropy(df['phi_up'], df['phi_up_err'])
-
+    p.lambda_EC, _ = bin_entropy(np.mean(df['QBER_key']), 0)
+    p.lambda_EC = p.lambda_EC*1.16
     df['secret_key_length'] = df['s_key_0_low']+df['s_key_1_low']*(1-entropy)\
                             - p.lambda_EC - 6*np.log2(19/p.secrecy) - np.log2(2/p.correctness)
 
