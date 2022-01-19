@@ -1,12 +1,10 @@
 import numpy as np
 import pandas as pd
 import argparse
-from parameters import parameters
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--block_length", default=int(1e6), help="number of total observations in the key basis",type=float)
+parser.add_argument("--block_length", default=int(1e5), help="number of total observations in the key basis",type=float)
 parser.add_argument("--fracdata", default=1, help="fraction of data to analyze",type=float)
-
 
 def main(block_length,fracdata):
     a = pd.read_csv('QKD_keys/decoded_keys_alice.csv')
@@ -38,11 +36,10 @@ def main(block_length,fracdata):
     df['decoy'] = df.apply(lambda x: list(x['decoy_state']) == np.full(len(x['decoy_state']), 'S'), axis=1) 
     df['time'] = np.arange(len(df))
     df.to_csv('QKD_keys/basis_reconciliation.csv', index=False)
+    
     #------------------------------------------------------------------------------------------------
 
-    def counting(df, block_length, N_data=None):
-        if N_data is None:
-            N_data = len(df)
+    def counting(df, block_length):
         raw_keys = pd.DataFrame({'time': [], 'total_pulses': [], 'm_key_mumax': [], 'm_key_mumin': [], 
                                 'n_key_mumax': [], 'n_key_mumin': [], 'm_check_mumax': [], 
                                 'm_check_mumin': [], 'n_check_mumax': [], 'n_check_mumin': []})             
@@ -57,7 +54,7 @@ def main(block_length,fracdata):
             while nkmax+ncmax<block_length:
                 #everytime we read a new line a second has passed 
                 for j in range(jbit, df['total_bits'][i]):
-                    tot_pulses+=1
+                    tot_pulses += 1
                     key_time += 1./df['total_bits'][i] # every bit is read in a fraction of a second 
                                                            # since the hole key is read in a second
                     if not df['same_basis'][i][j]: continue
@@ -84,9 +81,8 @@ def main(block_length,fracdata):
                         break
                 if nkmax+ncmax >= block_length: break
                 i+=1
+                jbit = 0
                 if i == len(df): break
-                jbit=0
-            
             raw_keys = raw_keys.append({'time': key_time, 'total_pulses': tot_pulses, 
                                         'm_key_mumax': mkmax, 'm_key_mumin': mkmin,
                                         'n_key_mumax': nkmax, 'n_key_mumin': nkmin, 
