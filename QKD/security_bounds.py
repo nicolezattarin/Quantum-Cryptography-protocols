@@ -4,7 +4,7 @@ import argparse
 from parameters import parameters
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--block_size", default=int(1e7), help="block_size ",type=int)
+parser.add_argument("--block_size", default=int(1e5), help="block_size ",type=int)
 parser.add_argument("--frac_data", default=1, help="fracrtion of data to read ",type=float)
 parser.add_argument("--alice_key_basis_prob", default=0.9, help="alice key basis probability ",type=float)
 parser.add_argument("--alice_check_basis_prob", default=0.1, help="alice check basis probability ",type=float)
@@ -32,10 +32,10 @@ def main(block_size,frac_data,
     df = pd.read_csv('results/countings_{}_{}frac.csv'.format(block_size, frac_data))
     df = df.drop(df.index[-1], axis=0)
 
-    time_scale = np.mean(df['total_pulses']/df['time'])
-    repetition_rate = 1
-    print('repetition rate: {}'.format(time_scale))
-    df['time'] = df['total_pulses']/time_scale
+#     time_scale = np.mean(df['total_pulses']/df['time'])
+
+#     print('repetition rate: {}'.format(time_scale))
+#     df['time'] = df['total_pulses']/time_scale
 
     # errors on countings and finite key effect
     for c in df.columns[1:]:
@@ -162,17 +162,17 @@ def main(block_size,frac_data,
             partial_d = (b*(b-1)*(log+1))/(2*d*d*np.log(2)*gamma_p)
             error = np.sqrt(eb**2*partial_b**2 + ec**2*partial_c**2 + ed**2*partial_d**2)
             return gamma, error
-
     err_temp = np.sqrt((df['v_check_1_up_err']/df['s_check_1_low'])**2\
                         +(df['v_check_1_up']*df['s_check_1_low_err']/df['s_check_1_low']**2)**2)
     df['gamma'], df['gamma_err'] = gamma(p.secrecy,df['v_check_1_up']/df['s_check_1_low'],
                                         df['s_key_1_low'],df['s_check_1_low'],
                                         err_temp, df['s_key_1_low_err'], df['s_check_1_low_err'])
-
     #phase error finally
     df['phi_up'] = df['v_check_1_up']/df['s_check_1_low'] + df['gamma']
     df['phi_up_err'] = np.sqrt(err_temp**2 + df['gamma_err']**2)
-    # df[df<0] = 0
+    print(df['s_check_1_low'])
+
+    df[df<0] = 0 #set to zero non physical values 
 
     def bin_entropy(x, ex):
             entropy = -x*np.log2(x)-(1-x)*np.log2(1-x)
@@ -189,6 +189,7 @@ def main(block_size,frac_data,
                                     + (df['s_key_1_low_err']*(1-entropy))**2 \
                                     + (df['s_key_1_low_err']*error)**2) 
 
+    repetition_rate = 1
     df['SKR'] = df['secret_key_length']*repetition_rate/df['total_pulses']
     df['SKR_err'] = np.sqrt( (df['secret_key_length_err']*repetition_rate/df['total_pulses'])**2 \
                     + (df['secret_key_length']*repetition_rate*df['total_pulses_err']/df['total_pulses']**2)**2)
