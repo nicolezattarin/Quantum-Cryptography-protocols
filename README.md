@@ -37,8 +37,37 @@ See [the report](https://github.com/nicolezattarin/Quantum-Cryptography-protocol
 
 [4] Marco Tomamichel, Christian Schaffner, Adam Smith, and Renato Renner. Leftover hashing against quantum side information. IEEE Transactions on Information Theory, 57(8):5524–5535, Aug 2011. ISSN 1557-9654. doi: 10.1109/tit.2011.2158473. URL http://dx.doi.org/10.1109/TIT.2011. 2158473.
 
+## Quantum Key Distribution (QKD)
+Quantum Key Distribution (QKD) is an approach for sharing symmetrical keys between distant users, usually referred as Alice and Bob, in an information-theoretically secure way. The implementation is based on establishing an optical link between Alice and Bob: the first prepares a state that is then sent to the receiver, who performs a measurement.
+
+QKD folder contains code to analyse data from a laboratory session in which we discussed the implementation the 3-state 1decoy QKD protocol proposed in [3]. Indeed the well known BB84 [1] was originally meant to work with true single-photons. Nevertheless, from a practical point of view, deterministic single-photon sources are still not available. Therefore, nowadays applications employ weak coherent laser pulses.
+
+Our analysis provides a way to compute a bound on the security key rate, security key length and quantum bit error rate (QBER), as proposed in [3].
+
+In particular:
+
+1. `decoding.py` is meant to read the data from a file and decode the keys encoded. Files contain key blocks of different length, each file begins with 8 bytes that code for a uint64 big-endian, which is the length N of the block (in bytes).  After these first 8 bytes, N bytes (=8N bits) of raw keys follow. After the N bytes, another block begins.
+
+    Each QKD state is represented by two bits.
+    Encoding of input-keys.alice: (00,H), (01,V), (10,D), (11,A) A not used in the three state protocol.
+    Encoding of input-keys.decoy: (00,Strong Intensity), (01,Low Intensity), (10,unused), (11,unused).
+    Encoding of input-keys.bob: (00,H), (01,V), (10,D), (11,A).
+    
+    This code saves the decoded keys in a .csv file with the corresponding block length.
 
 
+***References***
 
+[1] C. H. Bennett and G. Brassard. Proceedings of the IEEE International Conference on Computers, Systems and Signal Processing, Bangalore, page 175–179, 1984.
+
+[2] B. Huttner, N. Imoto, N. Gisin, and T. Mor. Quantum cryptography with coherent states. Phys. Rev. A, 51:1863–1869, Mar 1995. doi: 10.1103/PhysRevA.51.1863. URL https://link.aps.org/ doi/10.1103/PhysRevA.51.1863.
+
+[3] Davide Rusca, Alberto Boaron, Fadri Gru ̈nenfelder, Anthony Martin, and Hugo Zbinden. Finite- key analysis for the 1-decoy state qkd protocol. Applied Physics Letters, 112(17):171104, 2018. doi: 10.1063/1.5023340. URL https://doi.org/10.1063/1.5023340.
+
+[4] Charles Ci Wen Lim, Marcos Curty, Nino Walenta, Feihu Xu, and Hugo Zbinden. Concise security bounds for practical decoy-state quantum key distribution. Phys. Rev. A, 89:022307, Feb 2014. doi: 10.1103/PhysRevA.89.022307. URL https://link.aps.org/doi/10.1103/PhysRevA.89.022307.
+
+[5] Wassily Hoeffding. Probability inequalities for sums of bounded random variables. Journal of the American Statistical Association, 58(301):13–30, 1963. doi: 10.1080/01621459.1963.10500830. URL https://www.tandfonline.com/doi/abs/10.1080/01621459.1963.10500830.
+
+[6] Costantino Agnesi, Marco Avesani, Andrea Stanco, Paolo Villoresi, and Giuseppe Vallone. All-fiber self-compensating polarization encoder for quantum key distribution. Optics Letters, 44(10):2398, May 2019. ISSN 1539-4794. doi: 10.1364/ol.44.002398. URL http://dx.doi.org/10.1364/OL.44. 002398.
 
 
