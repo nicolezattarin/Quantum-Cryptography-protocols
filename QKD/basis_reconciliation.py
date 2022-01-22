@@ -7,6 +7,30 @@ parser.add_argument("--block_length", default=int(1e5), help="number of total ob
 parser.add_argument("--fracdata", default=1, help="fraction of data to analyze",type=float)
 
 def main(block_length,fracdata):
+    """
+    perfoms the basis reconciliation of the protocol, and count the number of errors and 
+    observations in order to generate a key of length block_length.
+
+    Parameters
+    ----------
+    block_length : int
+        number of total observations in the key basis
+    fracdata : float
+        fraction of data to analyze
+
+    Generates a csv file with the following columns:
+    - time: time necessary to reconstruct the key
+    - total_pulses: total number of pulses necessary to recontruct the key
+    - m_key_mumax: number of errors in the key corresponding to the maximum intensity decoy
+    - m_key_mumin: number of errors in the key corresponding to the minimum intensity decoy
+    - n_key_mumax: number of observations in the key corresponding to the maximum intensity decoy
+    - n_key_mumin: number of observations in the key corresponding to the minimum intensity decoy
+    - m_check_mumax: number of errors in the check basis corresponding to the maximum intensity decoy
+    - m_check_mumin: number of errors in the check basis corresponding to the minimum intensity decoy
+    - n_check_mumax: number of observations in the check basis corresponding to the maximum intensity decoy
+    - n_check_mumin: number of observations in the check basis corresponding to the minimum intensity decoy
+
+    """
     a = pd.read_csv('QKD_keys/decoded_keys_alice.csv')
     b = pd.read_csv('QKD_keys/decoded_keys_bob.csv')
     d = pd.read_csv('QKD_keys/decoded_keys_decoy.csv')

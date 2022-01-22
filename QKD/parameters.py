@@ -9,7 +9,31 @@ class parameters():
                     lambda_EC=1.16):
 
         """
-        Alice and Bob perform an error-correction step that reveals at most λEC bits of information
+        Parameters
+        ----------
+        alice_key_basis_prob : float
+            probability of Alice using the key basis
+        alice_check_basis_prob : float
+            probability of Alice using the check basis
+        bob_key_basis_prob : float
+            probability of Bob using the key basis
+        bob_check_basis_prob : float
+            probability of Bob using the check basis
+        decoy_strong_prob : float
+            probability of the decoy being the strong one
+        decoy_weak_prob : float
+            probability of the decoy being the weak one
+        decoy_strong_intensity : float
+            intensity of the strong decoy
+        decoy_weak_intensity : float
+            intensity of the weak decoy
+        secrecy : float
+            secrecy of the protocol
+        correctness : float
+            correctness of the protocol
+        lambda_EC : float
+            Alice and Bob perform an error-correction step that 
+            reveals at most λEC bits of information
         """
         import numpy as np
 

@@ -4,7 +4,7 @@ import argparse
 from parameters import parameters
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--block_size", default=int(1e5), help="block_size ",type=int)
+parser.add_argument("--block_size", default=int(1e6), help="block_size ",type=int)
 parser.add_argument("--frac_data", default=1, help="fracrtion of data to read ",type=float)
 parser.add_argument("--alice_key_basis_prob", default=0.9, help="alice key basis probability ",type=float)
 parser.add_argument("--alice_check_basis_prob", default=0.1, help="alice check basis probability ",type=float)
@@ -21,6 +21,44 @@ def main(block_size,frac_data,
         bob_key_basis_prob, bob_check_basis_prob,
         decoy_strong_prob, decoy_weak_prob,
         decoy_strong_intensity, decoy_weak_intensity):
+    """
+    Computes QBER and SKR with the respective error as it is proposed in 
+
+    [1] Davide Rusca, Alberto Boaron, Fadri Gru ̈nenfelder, Anthony Martin, and Hugo Zbinden. 
+    Finite- key analysis for the 1-decoy state qkd protocol. Applied Physics Letters, 
+    112(17):171104, 2018. doi: 10.1063/1.5023340. URL https://doi.org/10.1063/1.5023340.
+
+    [2] Charles Ci Wen Lim, Marcos Curty, Nino Walenta, Feihu Xu, and Hugo Zbinden. 
+    Concise security bounds for practical decoy-state quantum key distribution. 
+    Phys. Rev. A, 89:022307, Feb 2014. doi: 10.1103/PhysRevA.89.022307. 
+    URL https://link.aps.org/doi/10.1103/PhysRevA.89.022307.
+
+
+    Parameters
+    ----------
+    block_size : int
+        block size
+    frac_data : float
+        fraction of data to read
+    alice_key_basis_prob : float
+        probability of Alice using the key basis
+    alice_check_basis_prob : float
+        probability of Alice using the check basis
+    bob_key_basis_prob : float
+        probability of Bob using the key basis
+    bob_check_basis_prob : float
+        probability of Bob using the check basis
+    decoy_strong_prob : float
+        probability of the decoy being the strong one
+    decoy_weak_prob : float
+        probability of the decoy being the weak one
+    decoy_strong_intensity : float
+        intensity of the strong decoy
+    decoy_weak_intensity : float
+        intensity of the weak decoy
+    
+
+    """
     
     p = parameters(alice_key_basis_prob, alice_check_basis_prob, 
                     bob_key_basis_prob, bob_check_basis_prob,
@@ -31,11 +69,6 @@ def main(block_size,frac_data,
 
     df = pd.read_csv('results/countings_{}_{}frac.csv'.format(block_size, frac_data))
     df = df.drop(df.index[-1], axis=0)
-
-#     time_scale = np.mean(df['total_pulses']/df['time'])
-
-#     print('repetition rate: {}'.format(time_scale))
-#     df['time'] = df['total_pulses']/time_scale
 
     # errors on countings and finite key effect
     for c in df.columns[1:]:
@@ -170,7 +203,6 @@ def main(block_size,frac_data,
     #phase error finally
     df['phi_up'] = df['v_check_1_up']/df['s_check_1_low'] + df['gamma']
     df['phi_up_err'] = np.sqrt(err_temp**2 + df['gamma_err']**2)
-    print(df['s_check_1_low'])
 
     df[df<0] = 0 #set to zero non physical values 
 
