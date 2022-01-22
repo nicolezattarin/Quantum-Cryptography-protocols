@@ -2,7 +2,7 @@
 
 This repository is dedicated to provide code and results concerning the experimental implementation of Quantum Cryptography protocols. In particular, data and software are based on the course "Quantum Cryptography and security" held in the AY 2021/2022 at the University of Padova.
 
-The repository is divided in folders, each of which regards a specific experience, here we describe the main guidelines and describe how to reuse the code. 
+The repository is divided in folders, each of which regards a specific experience, here we describe the main guidelines and how to reuse the code. 
 
 ## Quantum Random Number Generators (QRNG)
 QRNG folder is dedicated to the analysis of data from a laboratory session in which we discussed the implementation of two types of QRNG, characterized by different degrees of trust on their elements. We will focus both on a trusted and a Semi-Device Independent QRNG.
