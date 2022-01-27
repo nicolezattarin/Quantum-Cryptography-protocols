@@ -6,7 +6,9 @@ parser = argparse.ArgumentParser()
 
 def main():
     """
-    
+    from the previous computations, computes the skr and all the bounds by 
+    considering each time all data from the beginning to a certen time.
+    this allows to show the dependence of a certain parameter on the time.
     """
     df = pd.read_csv('results/1000000block_1frac_results.csv')
     result = pd.DataFrame({'time': [], 'total_pulses': [], 'm_key_mumax': [], 'm_key_mumin': [], 
